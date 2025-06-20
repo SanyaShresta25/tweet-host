@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../supabaseClient';
 import { useNavigate } from 'react-router-dom';
 import {
-  Home, PlayCircle, Archive, CreditCard, Settings, Zap, TrendingUp,
-  Download, Sparkles, ChevronRight, Activity
+  Home, PlayCircle, Archive, CreditCard, Settings, 
+  Download, Sparkles, ChevronRight, Activity, Zap
 } from 'lucide-react';
 import PricingModal from './PricingModal';
 
@@ -66,34 +66,6 @@ const Dashboard: React.FC = () => {
   const sidebarClasses = isDarkMode
     ? 'bg-gradient-to-b from-purple-900/90 to-gray-900/90 backdrop-blur-xl border-r border-white/10'
     : 'bg-gradient-to-b from-purple-800/90 to-purple-900/90 backdrop-blur-xl border-r border-purple-300/30';
-
-  const StatCard = ({
-    icon: Icon,
-    title,
-    value,
-    trend,
-    color,
-  }: {
-    icon: React.ElementType;
-    title: string;
-    value: string;
-    trend: string;
-    color: string;
-  }) => (
-    <div className={`${cardClasses} p-6 rounded-2xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 group cursor-pointer`}>
-      <div className="flex items-center justify-between mb-4">
-        <div className={`p-3 rounded-xl bg-gradient-to-r ${color} group-hover:scale-110 transition-transform duration-300`}>
-          <Icon className="w-6 h-6 text-white" />
-        </div>
-        <div className="text-green-500 flex items-center text-sm font-semibold">
-          <TrendingUp className="w-4 h-4 mr-1" />
-          {trend}
-        </div>
-      </div>
-      <h3 className="text-2xl font-bold mb-1">{value}</h3>
-      <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>{title}</p>
-    </div>
-  );
 
   const NavButton = ({
     icon: Icon,

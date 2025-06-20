@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Clock, Zap } from 'lucide-react';
+import { Clock } from 'lucide-react';
 import { supabase } from '../supabaseClient';
 import { useNavigate } from 'react-router-dom';
 import LoginModal from '../components/LoginModal';
