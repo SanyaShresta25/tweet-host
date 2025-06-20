@@ -1,21 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { supabase } from '../supabaseClient';
 import { useNavigate } from 'react-router-dom';
 import {
-  Home, PlayCircle, Archive, CreditCard, Settings, Zap, TrendingUp, 
-  Users, Clock, Download, Sparkles, ChevronRight, Activity
+  Home, PlayCircle, Archive, CreditCard, Settings, Zap, TrendingUp,
+  Download, Sparkles, ChevronRight, Activity
 } from 'lucide-react';
 import PricingModal from './PricingModal';
 
-const Dashboard = () => {
+const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const [status, setStatus] = useState('Checking API...');
   const [transcription, setTranscription] = useState('');
   const [summary, setSummary] = useState('');
-  const [userEmail, setUserEmail] = useState(null);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showPricing, setShowPricing] = useState(false);
-  const [activeSection, setActiveSection] = useState('transcription');
+  const [activeSection, setActiveSection] = useState<'transcription' | 'summary'>('transcription');
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -23,14 +23,12 @@ const Dashboard = () => {
       const { data: { user } } = await supabase.auth.getUser();
       setUserEmail(user?.email || 'User');
     };
-    getUser();
 
-    // Fetch data from API
     const fetchData = async () => {
       setIsLoading(true);
       try {
         setStatus('🔄 Connecting to Twitter Space...');
-        
+
         const res = await fetch('http://52.65.50.48:3000/download', {
           method: 'POST',
           headers: {
@@ -47,7 +45,7 @@ const Dashboard = () => {
         setTranscription(data.transcription || 'No transcription received.');
         setSummary(data.summary || 'No summary available.');
         setIsLoading(false);
-      } catch (err) {
+      } catch (err: any) {
         setStatus(`❌ API Error: ${err.message}`);
         setIsLoading(false);
       }
@@ -69,7 +67,19 @@ const Dashboard = () => {
     ? 'bg-gradient-to-b from-purple-900/90 to-gray-900/90 backdrop-blur-xl border-r border-white/10'
     : 'bg-gradient-to-b from-purple-800/90 to-purple-900/90 backdrop-blur-xl border-r border-purple-300/30';
 
-  const StatCard = ({ icon: Icon, title, value, trend, color }) => (
+  const StatCard = ({
+    icon: Icon,
+    title,
+    value,
+    trend,
+    color,
+  }: {
+    icon: React.ElementType;
+    title: string;
+    value: string;
+    trend: string;
+    color: string;
+  }) => (
     <div className={`${cardClasses} p-6 rounded-2xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 group cursor-pointer`}>
       <div className="flex items-center justify-between mb-4">
         <div className={`p-3 rounded-xl bg-gradient-to-r ${color} group-hover:scale-110 transition-transform duration-300`}>
@@ -85,7 +95,17 @@ const Dashboard = () => {
     </div>
   );
 
-  const NavButton = ({ icon: Icon, children, active = false, onClick }) => (
+  const NavButton = ({
+    icon: Icon,
+    children,
+    active = false,
+    onClick,
+  }: {
+    icon: React.ElementType;
+    children: React.ReactNode;
+    active?: boolean;
+    onClick?: () => void;
+  }) => (
     <button
       onClick={onClick}
       className={`flex items-center justify-between w-full p-4 rounded-xl transition-all duration-300 group relative overflow-hidden ${
@@ -107,7 +127,7 @@ const Dashboard = () => {
 
   return (
     <div className={`min-h-screen transition-all duration-500 ${themeClasses} relative overflow-hidden`}>
-      {/* Animated Background Elements */}
+      {/* Animated Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl animate-pulse" />
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-pink-500/20 rounded-full blur-3xl animate-pulse delay-1000" />
@@ -115,38 +135,23 @@ const Dashboard = () => {
       </div>
 
       <div className="flex relative z-10 h-screen">
-        {/* Enhanced Sidebar - Extended to full height */}
+        {/* Sidebar */}
         <aside className={`w-80 flex flex-col ${sidebarClasses} shadow-2xl h-screen`}>
-          {/* Header Section */}
           <div className="p-8 pb-6">
-            <div className="mb-2">
-              <h2 className="text-2xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
-                SpacesCoHost
-              </h2>
-            </div>
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
+              SpacesCoHost
+            </h2>
             <p className="text-purple-300 text-sm">AI-Powered Audio Intelligence</p>
           </div>
 
-          {/* Navigation Section */}
           <nav className="px-8 space-y-3 flex-1 overflow-y-auto">
-            <NavButton icon={Home} onClick={() => navigate('/')}>
-              Dashboard
-            </NavButton>
-            <NavButton icon={PlayCircle}>
-              Start Session
-            </NavButton>
-            <NavButton icon={Archive}>
-              Archives
-            </NavButton>
-            <NavButton icon={CreditCard} onClick={() => setShowPricing(true)}>
-              Billing
-            </NavButton>
-            <NavButton icon={Settings}>
-              Settings
-            </NavButton>
+            <NavButton icon={Home} onClick={() => navigate('/')}>Dashboard</NavButton>
+            <NavButton icon={PlayCircle}>Start Session</NavButton>
+            <NavButton icon={Archive}>Archives</NavButton>
+            <NavButton icon={CreditCard} onClick={() => setShowPricing(true)}>Billing</NavButton>
+            <NavButton icon={Settings}>Settings</NavButton>
           </nav>
 
-          {/* User Profile Section - Fixed at bottom */}
           <div className="p-8 pt-6">
             <div className={`p-4 rounded-2xl ${cardClasses}`}>
               <div className="flex items-center gap-3 mb-3">
@@ -154,12 +159,8 @@ const Dashboard = () => {
                   {userEmail ? userEmail.charAt(0).toUpperCase() : 'U'}
                 </div>
                 <div>
-                  <p className="font-semibold text-sm">
-                    {userEmail ? userEmail.split('@')[0] : 'User'}
-                  </p>
-                  <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                    Pro Member
-                  </p>
+                  <p className="font-semibold text-sm">{userEmail ? userEmail.split('@')[0] : 'User'}</p>
+                  <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Pro Member</p>
                 </div>
               </div>
               <div className="flex items-center gap-2 text-xs text-green-400 bg-green-400/10 px-2 py-1 rounded-full">
@@ -170,9 +171,8 @@ const Dashboard = () => {
           </div>
         </aside>
 
-        {/* Enhanced Main Content */}
+        {/* Main */}
         <main className="flex-1 p-10 overflow-y-auto">
-          {/* Header Section */}
           <div className="flex justify-between items-center mb-8">
             <div>
               <h1 className="text-5xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
@@ -196,7 +196,6 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Status Banner */}
           <div className={`${cardClasses} p-6 rounded-2xl shadow-xl mb-8 border-l-4 border-l-green-500`}>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
@@ -218,13 +217,12 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Content Tabs */}
           <div className="mb-6">
             <div className="flex gap-4">
               {['transcription', 'summary'].map((tab) => (
                 <button
                   key={tab}
-                  onClick={() => setActiveSection(tab)}
+                  onClick={() => setActiveSection(tab as 'transcription' | 'summary')}
                   className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
                     activeSection === tab
                       ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg scale-105'
@@ -237,7 +235,6 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Content Sections */}
           <div className="space-y-6">
             {activeSection === 'transcription' && (
               <div className={`${cardClasses} p-8 rounded-2xl shadow-xl transform transition-all duration-500`}>
