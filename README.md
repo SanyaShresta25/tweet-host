@@ -1,54 +1,113 @@
-# React + TypeScript + Vite
+# 🚀 SpacesCoHost - Your AI Co-Host for Twitter Spaces
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+SpacesCoHost is a modern AI-powered web app built with **React + Vite + Supabase**, designed to transcribe, summarize, and generate content from Twitter Spaces in real time. Easily deployable on **Vercel**.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Features
 
-## Expanding the ESLint configuration
+* 🎙 Real-time Twitter Spaces transcription
+* ✍️ Smart summaries for key takeaways
+* 🧠 AI-generated content (tweets, blogs, newsletters)
+* 🌗 Light/Dark theme toggle
+* 🔐 Auth system using Supabase
+* 📦 Modular modal components (Login, Signup, Pricing, Features)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## 🧱 Tech Stack
+
+* **Frontend:** React + Vite + TypeScript
+* **Icons:** lucide-react
+* **Backend:** Supabase (auth + data)
+* **Deployment:** Vercel
+
+---
+
+## 📁 Project Structure
+
+```
+src/
+├── components/
+│   ├── LoginModal.tsx
+│   ├── SignupModal.tsx
+│   ├── FeaturesModal.tsx
+│   ├── PricingModal.tsx
+│   └── FaqSection.tsx
+├── pages/
+│   └── NexusAILanding.tsx
+├── supabaseClient.ts
+└── main.tsx
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 🔧 Setup
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/yourusername/spacescohost.git
+cd spacescohost
 ```
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Create a `.env` file
+
+```env
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-public-anon-key
+```
+
+> ✅ Don't forget to add `.env` to your `.gitignore`.
+
+---
+
+## ▶️ Development
+
+```bash
+npm run dev
+```
+
+---
+
+## 🚀 Deployment (Vercel)
+
+1. Push to GitHub
+2. Go to [https://vercel.com](https://vercel.com) → Import Project
+3. Set Framework: `Vite`
+4. Add Environment Variables
+5. Click **Deploy**
+
+---
+
+## 🛠 Scripts
+
+```bash
+npm run dev      # Start dev server
+npm run build    # Build for production
+npm run preview  # Preview production build
+```
+
+---
+
+## 📄 License
+
+MIT
+
+---
+
+## 🙌 Contributing
+
+Pull requests are welcome! Please open an issue first for major changes.
+
+---
+
+## ✉️ Contact
+
+Built with ❤️ by \[Sanya Shresta Jathanna].
