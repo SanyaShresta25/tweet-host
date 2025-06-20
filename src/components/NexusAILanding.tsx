@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Clock, Zap } from 'lucide-react';
 import { supabase } from '../supabaseClient';
+import { useNavigate } from 'react-router-dom';
 import LoginModal from '../components/LoginModal';
 import SignupModal from '../components/SignupModal';
 import FeaturesModal from '../components/FeaturesModal';
 import PricingModal from '../components/PricingModal';
 import FaqSection from '../components/FaqSection';
+import logo from '../assets/logo.png';
 
 const NexusAILanding: React.FC = () => {
   const [showLogin, setShowLogin] = useState(false);
@@ -17,6 +19,7 @@ const NexusAILanding: React.FC = () => {
   const [signupEmail, setSignupEmail] = useState('');
   const [signupPassword, setSignupPassword] = useState('');
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const navigate = useNavigate();
 
   const toggleTheme = () => setIsDarkMode(!isDarkMode);
 
@@ -26,7 +29,10 @@ const NexusAILanding: React.FC = () => {
       password: loginPassword,
     });
     if (error) alert('Login failed: ' + error.message);
-    else alert('Logged in!');
+    else {
+      alert('Logged in!');
+      navigate('/dashboard');
+    }
   };
 
   const handleSignup = async () => {
@@ -50,9 +56,11 @@ const NexusAILanding: React.FC = () => {
     <div className={`min-h-screen ${themeClasses} transition-colors duration-300`}>
       <header className="flex justify-between items-center p-6">
         <div className="flex items-center space-x-2">
-          <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
-            <Zap className="w-6 h-6 text-white" />
-          </div>
+         <img
+  src={logo}
+  alt="SpacesCoHost Logo"
+  className="w-10 h-10 rounded-lg object-cover"
+/>
           <div className="flex flex-col">
             <span className="text-xl font-bold">SpacesCoHost</span>
             <span className="text-sm text-gray-500 dark:text-gray-400">by NexusVoidAI</span>
@@ -60,35 +68,18 @@ const NexusAILanding: React.FC = () => {
         </div>
         <div className="flex items-center space-x-4">
           <nav className="hidden md:flex space-x-6">
-            <button
-              onClick={() => setShowFeatures(true)}
-              className="text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
-            >
-              Features
-            </button>
-            <button
-              onClick={() => setShowPricing(true)}
-              className="text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
-            >
-              Pricing
-            </button>
+            <button onClick={() => setShowFeatures(true)} className="text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Features</button>
+            <button onClick={() => setShowPricing(true)} className="text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Pricing</button>
           </nav>
-          <button
-            onClick={toggleTheme}
-            className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-          >
+          <button onClick={toggleTheme} className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
             {isDarkMode ? '☀️' : '🌙'}
           </button>
-          <button
-            onClick={() => setShowLogin(true)}
-            className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors"
-          >
-            Login
-          </button>
+          <button onClick={() => setShowLogin(true)} className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors">Login</button>
         </div>
       </header>
 
       <main className="container mx-auto px-6 py-16">
+        {/* Hero Section */}
         <div className="flex flex-col lg:flex-row items-center justify-between lg:gap-12">
           <div className="lg:w-1/2 mb-8 lg:mb-0 text-center lg:text-left flex flex-col justify-center">
             <h1 className="text-5xl lg:text-6xl font-bold mb-6 leading-tight">
@@ -100,18 +91,8 @@ const NexusAILanding: React.FC = () => {
               Transcribe, summarize, and generate content from Twitter Spaces in real-time.
             </p>
             <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 justify-center lg:justify-start">
-              <button
-                onClick={() => setShowLogin(true)}
-                className="px-8 py-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-semibold text-lg"
-              >
-                Get Started
-              </button>
-              <button
-                onClick={() => setShowFeatures(true)}
-                className="px-8 py-4 border-2 border-purple-600 text-purple-600 rounded-lg hover:bg-purple-50 dark:hover:bg-purple-900 transition-colors font-semibold text-lg"
-              >
-                View Features
-              </button>
+              <button onClick={() => setShowLogin(true)} className="px-8 py-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-semibold text-lg">Get Started</button>
+              <button onClick={() => setShowFeatures(true)} className="px-8 py-4 border-2 border-purple-600 text-purple-600 rounded-lg hover:bg-purple-50 dark:hover:bg-purple-900 transition-colors font-semibold text-lg">View Features</button>
             </div>
           </div>
           <div className="lg:w-1/2 flex justify-center lg:justify-center">
@@ -161,10 +142,7 @@ const NexusAILanding: React.FC = () => {
       )}
 
       {showPricing && <PricingModal onClose={() => setShowPricing(false)} />}
-
-      {showFeatures && (
-        <FeaturesModal onClose={() => setShowFeatures(false)} cardClasses={cardClasses} />
-      )}
+      {showFeatures && <FeaturesModal onClose={() => setShowFeatures(false)} cardClasses={cardClasses} />}
     </div>
   );
 };
