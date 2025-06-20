@@ -96,11 +96,6 @@ npm run preview  # Preview production build
 
 ---
 
-## 📄 License
-
-MIT
-
----
 
 ## 🙌 Contributing
 
@@ -110,4 +105,4 @@ Pull requests are welcome! Please open an issue first for major changes.
 
 ## ✉️ Contact
 
-Built with ❤️ by \[Sanya Shresta Jathanna].
+Built with ❤️ by Sanya Shresta Jathanna.
