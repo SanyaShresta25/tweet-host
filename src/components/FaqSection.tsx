@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
 
 interface FaqItem {
   question: string;
@@ -42,20 +43,40 @@ const faqs: FaqItem[] = [
   },
 ];
 
-const FaqSection: React.FC<FaqSectionProps> = ({ cardClasses }) => (
-  <section className="mt-64">
-    <h2 className="text-4xl font-bold text-center text-purple-600 mb-16">
-      Frequently Asked Questions
-    </h2>
-    <div className="max-w-4xl mx-auto space-y-6">
-      {faqs.map((faq, index) => (
-        <div key={index} className={`${cardClasses} p-6 rounded-lg border shadow-lg`}>
-          <h3 className="text-xl font-bold mb-3">{faq.question}</h3>
-          <p className="text-gray-600 dark:text-gray-300">{faq.answer}</p>
-        </div>
-      ))}
-    </div>
-  </section>
-);
+const FaqSection: React.FC<FaqSectionProps> = ({ cardClasses }) => {
+  const ref = useRef(null);
+  const inView = useInView(ref, { amount: 0.15, once: true });
+
+  return (
+    <section className="mt-64" ref={ref}>
+      <motion.h2
+        className="text-4xl font-bold text-center text-purple-600 mb-16"
+        initial={{ opacity: 0, y: 40 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.7 }}
+      >
+        Frequently Asked Questions
+      </motion.h2>
+      <div className="max-w-4xl mx-auto space-y-6">
+        {faqs.map((faq, index) => (
+          <motion.div
+            key={index}
+            className={`${cardClasses} p-6 rounded-lg border shadow-lg`}
+            initial={{ opacity: 0, y: 60 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{
+              duration: 0.6,
+              delay: 0.18 + index * 0.15,
+              ease: "easeOut",
+            }}
+          >
+            <h3 className="text-xl font-bold mb-3">{faq.question}</h3>
+            <p className="text-gray-600 dark:text-gray-300">{faq.answer}</p>
+          </motion.div>
+        ))}
+      </div>
+    </section>
+  );
+};
 
 export default FaqSection;

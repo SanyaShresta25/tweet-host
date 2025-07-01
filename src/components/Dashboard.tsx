@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../supabaseClient';
 import { useNavigate } from 'react-router-dom';
-import {
-  Home, PlayCircle, Archive, CreditCard, Settings, 
-  Download, Sparkles, ChevronRight, Activity, Zap
-} from 'lucide-react';
+import Sidebar from './Sidebar';
+import MainPanel from './MainPanel';
 import PricingModal from './PricingModal';
 
 const Dashboard: React.FC = () => {
@@ -28,25 +26,21 @@ const Dashboard: React.FC = () => {
       setIsLoading(true);
       try {
         setStatus('🔄 Connecting to Twitter Space...');
-
-        const res = await fetch('http://52.65.50.48:3000/download', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-api-key': 'yaml123456789',
-          },
-          body: JSON.stringify({}),
-        });
-
+        const res = await fetch('http://localhost:5000/api/download');
         if (!res.ok) throw new Error(`API Error ${res.status}`);
         const data = await res.json();
-
         setStatus('✅ Twitter Space download completed successfully!');
         setTranscription(data.transcription || 'No transcription received.');
         setSummary(data.summary || 'No summary available.');
         setIsLoading(false);
-      } catch (err: any) {
-        setStatus(`❌ API Error: ${err.message}`);
+      } catch (err) {
+        let errorMsg = "Unknown error";
+        if (err instanceof Error) {
+          errorMsg = err.message;
+        } else if (typeof err === "string") {
+          errorMsg = err;
+        }
+        setStatus(`❌ API Error: ${errorMsg}`);
         setIsLoading(false);
       }
     };
@@ -67,36 +61,6 @@ const Dashboard: React.FC = () => {
     ? 'bg-gradient-to-b from-purple-900/90 to-gray-900/90 backdrop-blur-xl border-r border-white/10'
     : 'bg-gradient-to-b from-purple-800/90 to-purple-900/90 backdrop-blur-xl border-r border-purple-300/30';
 
-  const NavButton = ({
-    icon: Icon,
-    children,
-    active = false,
-    onClick,
-  }: {
-    icon: React.ElementType;
-    children: React.ReactNode;
-    active?: boolean;
-    onClick?: () => void;
-  }) => (
-    <button
-      onClick={onClick}
-      className={`flex items-center justify-between w-full p-4 rounded-xl transition-all duration-300 group relative overflow-hidden ${
-        active
-          ? 'bg-white/20 text-white shadow-lg scale-105'
-          : 'text-purple-200 hover:text-white hover:bg-white/10'
-      }`}
-    >
-      <div className="flex items-center gap-3">
-        <Icon size={20} className="group-hover:scale-110 transition-transform duration-300" />
-        <span className="font-medium">{children}</span>
-      </div>
-      <ChevronRight size={16} className={`transition-transform duration-300 ${active ? 'rotate-90' : 'group-hover:translate-x-1'}`} />
-      {active && (
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-400/20 to-pink-400/20 rounded-xl" />
-      )}
-    </button>
-  );
-
   return (
     <div className={`min-h-screen transition-all duration-500 ${themeClasses} relative overflow-hidden`}>
       {/* Animated Background */}
@@ -107,153 +71,29 @@ const Dashboard: React.FC = () => {
       </div>
 
       <div className="flex relative z-10 h-screen">
-        {/* Sidebar */}
-        <aside className={`w-80 flex flex-col ${sidebarClasses} shadow-2xl h-screen`}>
-          <div className="p-8 pb-6">
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
-              SpacesCoHost
-            </h2>
-            <p className="text-purple-300 text-sm">AI-Powered Audio Intelligence</p>
-          </div>
+        <Sidebar
+          userEmail={userEmail}
+          isDarkMode={isDarkMode}
+          cardClasses={cardClasses}
+          sidebarClasses={sidebarClasses}
+          navigate={navigate}
+          setShowPricing={setShowPricing}
+        />
 
-          <nav className="px-8 space-y-3 flex-1 overflow-y-auto">
-            <NavButton icon={Home} onClick={() => navigate('/')}>Dashboard</NavButton>
-            <NavButton icon={PlayCircle}>Start Session</NavButton>
-            <NavButton icon={Archive}>Archives</NavButton>
-            <NavButton icon={CreditCard} onClick={() => setShowPricing(true)}>Billing</NavButton>
-            <NavButton icon={Settings}>Settings</NavButton>
-          </nav>
-
-          <div className="p-8 pt-6">
-            <div className={`p-4 rounded-2xl ${cardClasses}`}>
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-12 h-12 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                  {userEmail ? userEmail.charAt(0).toUpperCase() : 'U'}
-                </div>
-                <div>
-                  <p className="font-semibold text-sm">{userEmail ? userEmail.split('@')[0] : 'User'}</p>
-                  <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Pro Member</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 text-xs text-green-400 bg-green-400/10 px-2 py-1 rounded-full">
-                <Activity className="w-3 h-3" />
-                Online
-              </div>
-            </div>
-          </div>
-        </aside>
-
-        {/* Main */}
-        <main className="flex-1 p-10 overflow-y-auto">
-          <div className="flex justify-between items-center mb-8">
-            <div>
-              <h1 className="text-5xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
-                Welcome back!
-              </h1>
-              <p className={`text-lg ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                Here's what's happening with your audio sessions today
-              </p>
-            </div>
-            <div className="flex items-center gap-4">
-              <button
-                onClick={() => setIsDarkMode(!isDarkMode)}
-                className={`p-3 rounded-xl ${cardClasses} hover:scale-110 transition-all duration-300 shadow-lg`}
-              >
-                {isDarkMode ? '☀️' : '🌙'}
-              </button>
-              <button className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg hover:scale-105 transition-all duration-300 flex items-center gap-2">
-                <Download className="w-4 h-4" />
-                Export Data
-              </button>
-            </div>
-          </div>
-
-          <div className={`${cardClasses} p-6 rounded-2xl shadow-xl mb-8 border-l-4 border-l-green-500`}>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-green-500/20 rounded-xl">
-                  <Zap className="w-6 h-6 text-green-500" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-lg mb-1">System Status</h3>
-                  <p className={`${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>{status}</p>
-                </div>
-              </div>
-              {isLoading && (
-                <div className="flex space-x-1">
-                  <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" />
-                  <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce delay-100" />
-                  <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce delay-200" />
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className="mb-6">
-            <div className="flex gap-4">
-              {['transcription', 'summary'].map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveSection(tab as 'transcription' | 'summary')}
-                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                    activeSection === tab
-                      ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg scale-105'
-                      : `${cardClasses} hover:scale-105`
-                  }`}
-                >
-                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="space-y-6">
-            {activeSection === 'transcription' && (
-              <div className={`${cardClasses} p-8 rounded-2xl shadow-xl transform transition-all duration-500`}>
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="p-3 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl">
-                    <PlayCircle className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <h2 className="text-2xl font-bold mb-1">Live Transcription</h2>
-                    <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                      Real-time audio-to-text conversion
-                    </p>
-                  </div>
-                </div>
-                <div className={`p-6 rounded-xl ${isDarkMode ? 'bg-gray-800/50' : 'bg-purple-50/50'} border-2 border-dashed ${isDarkMode ? 'border-gray-600' : 'border-purple-200'}`}>
-                  <p className={`whitespace-pre-wrap leading-relaxed ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
-                    {transcription || 'Transcription will appear here once processing begins...'}
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {activeSection === 'summary' && (
-              <div className={`${cardClasses} p-8 rounded-2xl shadow-xl transform transition-all duration-500`}>
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="p-3 bg-gradient-to-r from-pink-500 to-pink-600 rounded-xl">
-                    <Sparkles className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <h2 className="text-2xl font-bold mb-1">AI Summary</h2>
-                    <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                      Intelligent content analysis and key points
-                    </p>
-                  </div>
-                </div>
-                <div className={`p-6 rounded-xl ${isDarkMode ? 'bg-gray-800/50' : 'bg-pink-50/50'} border-2 border-dashed ${isDarkMode ? 'border-gray-600' : 'border-pink-200'}`}>
-                  <p className={`whitespace-pre-wrap leading-relaxed ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
-                    {summary || 'AI-generated summary will appear here after transcription completes...'}
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
-        </main>
+        <MainPanel
+          activeSection={activeSection}
+          setActiveSection={setActiveSection}
+          isDarkMode={isDarkMode}
+          cardClasses={cardClasses}
+          status={status}
+          isLoading={isLoading}
+          transcription={transcription}
+          summary={summary}
+          onThemeToggle={() => setIsDarkMode((v) => !v)}
+          onShowPricing={() => setShowPricing(true)}
+        />
       </div>
 
-      {/* Pricing Modal */}
       {showPricing && <PricingModal onClose={() => setShowPricing(false)} />}
     </div>
   );

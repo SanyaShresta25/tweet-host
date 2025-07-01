@@ -8,6 +8,12 @@ import FeaturesModal from '../components/FeaturesModal';
 import PricingModal from '../components/PricingModal';
 import FaqSection from '../components/FaqSection';
 import logo from '../assets/logo.png';
+import OnboardingSteps from '../components/OnboardingSteps';
+import { motion } from 'framer-motion';
+import HeroSection from "../components/HeroSection";
+import TestimonialSection from '../components/TestimonialSection';
+import Footer from '../components/Footer';
+
 
 const NexusAILanding: React.FC = () => {
   const [showLogin, setShowLogin] = useState(false);
@@ -78,38 +84,17 @@ const NexusAILanding: React.FC = () => {
         </div>
       </header>
 
-      <main className="container mx-auto px-6 py-16">
-        {/* Hero Section */}
-        <div className="flex flex-col lg:flex-row items-center justify-between lg:gap-12">
-          <div className="lg:w-1/2 mb-8 lg:mb-0 text-center lg:text-left flex flex-col justify-center">
-            <h1 className="text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-              <span className="text-purple-600">Your AI Co-Host</span>
-              <br />
-              <span className={isDarkMode ? 'text-white' : 'text-gray-900'}>for Twitter Spaces</span>
-            </h1>
-            <p className="text-xl lg:text-2xl text-gray-600 dark:text-gray-300 mb-8 max-w-xl leading-relaxed">
-              Transcribe, summarize, and generate content from Twitter Spaces in real-time.
-            </p>
-            <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 justify-center lg:justify-start">
-              <button onClick={() => setShowLogin(true)} className="px-8 py-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-semibold text-lg">Get Started</button>
-              <button onClick={() => setShowFeatures(true)} className="px-8 py-4 border-2 border-purple-600 text-purple-600 rounded-lg hover:bg-purple-50 dark:hover:bg-purple-900 transition-colors font-semibold text-lg">View Features</button>
-            </div>
-          </div>
-          <div className="lg:w-1/2 flex justify-center lg:justify-center">
-            <div className="relative">
-              <div className="w-72 h-72 lg:w-80 lg:h-80 bg-gradient-to-br from-purple-600 to-purple-700 rounded-full flex items-center justify-center shadow-2xl">
-                <Clock className="w-24 h-24 lg:w-28 lg:h-28 text-white" />
-              </div>
-              <div className="absolute -top-4 -right-4 w-8 h-8 bg-purple-400 rounded-full opacity-80"></div>
-              <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-purple-400 rounded-full opacity-70"></div>
-              <div className="absolute top-8 -left-8 w-4 h-4 bg-purple-400 rounded-full opacity-60"></div>
-              <div className="absolute bottom-8 -right-8 w-5 h-5 bg-purple-400 rounded-full opacity-75"></div>
-            </div>
-          </div>
-        </div>
+ <HeroSection
+  isDarkMode={isDarkMode}
+  onGetStarted={() => setShowLogin(true)}
+  onViewFeatures={() => setShowFeatures(true)}
+/>
+<div className="h-32 md:h-48"></div>
 
-        <FaqSection cardClasses={cardClasses} />
-      </main>
+  <OnboardingSteps isDarkMode={isDarkMode} />
+  <TestimonialSection isDarkMode={isDarkMode} />
+  <FaqSection cardClasses={cardClasses} />
+  <Footer isDarkMode={isDarkMode} />
 
       {showLogin && (
         <LoginModal
