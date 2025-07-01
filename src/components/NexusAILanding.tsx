@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Clock } from 'lucide-react';
 import { supabase } from '../supabaseClient';
 import { useNavigate } from 'react-router-dom';
 import LoginModal from '../components/LoginModal';
@@ -9,7 +8,6 @@ import PricingModal from '../components/PricingModal';
 import FaqSection from '../components/FaqSection';
 import logo from '../assets/logo.png';
 import OnboardingSteps from '../components/OnboardingSteps';
-import { motion } from 'framer-motion';
 import HeroSection from "../components/HeroSection";
 import TestimonialSection from '../components/TestimonialSection';
 import Footer from '../components/Footer';

@@ -9,7 +9,6 @@ interface HeroSectionProps {
 }
 
 const HeroSection: React.FC<HeroSectionProps> = ({
-  isDarkMode,
   onGetStarted,
   onViewFeatures,
 }) => {
