@@ -9,6 +9,7 @@ interface HeroSectionProps {
 }
 
 const HeroSection: React.FC<HeroSectionProps> = ({
+  isDarkMode,
   onGetStarted,
   onViewFeatures,
 }) => {
@@ -36,9 +37,17 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           <h1 className="text-5xl lg:text-6xl font-bold mb-3 leading-tight bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
             Your AI Co-Host
           </h1>
-          <h2 className="text-4xl lg:text-5xl font-black text-gray-900 dark:text-white mb-5">
-            for Twitter Spaces
-          </h2>
+        <h2
+        className={`
+          text-4xl lg:text-5xl font-black mb-5
+          ${isDarkMode
+            ? "text-purple-200 bg-gradient-to-r from-purple-300 via-pink-300 to-purple-400 bg-clip-text text-transparent"
+            : "text-purple-700"
+          }
+        `}
+      >
+        for Twitter Spaces
+      </h2>
           <p className="text-xl lg:text-2xl text-gray-600 dark:text-gray-300 mb-8 max-w-xl">
             Transcribe, summarize, and generate content from Twitter Spaces in real-time.
           </p>
